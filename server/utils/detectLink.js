@@ -70,51 +70,29 @@ function detectLink(inputUrl) {
     if (unicodeDetected) riskScore += 30;
     if (homographDetected) riskScore += 30;
 
-    // const domainName = normalizeDomain(getMainDomain(decodedDomain));
     const domainName = normalizeDomain(decodedDomain.split(".")[0]);
+    const domainParts = domainName.split("-");
 
     let similarDomain = null;
     let similarityScore = 0;
 
-    // for (const brand of brands) {
-    //   const brandName = normalizeDomain(getMainDomain(brand));
-
-    //   const score = similarityPercent(domainName, brandName);
-
-    //   if (score > similarityScore) {
-    //     similarityScore = score;
-    //     similarDomain = brand;
-    //   }
-    // }
-
-    // for (const brand of brands) {
-    //   const brandName = normalizeDomain(getMainDomain(brand));
-
-    //   const score = similarityPercent(domainName, brandName);
-
-    //   console.log(domainName, "vs", brandName, "=", score);
-
-    //   if (score > similarityScore) {
-    //     similarityScore = score;
-    //     similarDomain = brand;
-    //   }
-    // }
-
     for (const brand of brands) {
       const brandName = normalizeDomain(brand.split(".")[0]);
 
-      // jika brand muncul di domain
-      if (domainName.includes(brandName)) {
-        similarityScore = 95;
-        similarDomain = brand;
-        break;
-      }
+      // cek setiap bagian domain
+      for (const part of domainParts) {
+        if (part === brandName) {
+          similarityScore = 95;
+          similarDomain = brand;
+          break;
+        }
 
-      const score = similarityPercent(domainName, brandName);
+        const score = similarityPercent(part, brandName);
 
-      if (score > similarityScore) {
-        similarityScore = score;
-        similarDomain = brand;
+        if (score > similarityScore) {
+          similarityScore = score;
+          similarDomain = brand;
+        }
       }
     }
 
