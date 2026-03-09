@@ -1,4 +1,4 @@
-# Link Guardian 🔐
+# Link Detector 🔐
 
 **Link Guardian** is a web-based phishing detection tool that analyzes suspicious URLs and identifies potential security threats such as **typosquatting, homograph attacks, Unicode domains, and punycode manipulation**.
 
@@ -230,3 +230,4 @@ This project was created as a **learning project in web security and phishing de
 
 This tool is designed **for educational and research purposes only**.
 It should not be used as a full replacement for professional phishing detection systems.
+
