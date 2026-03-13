@@ -1,6 +1,10 @@
-const brands = require("./brandDomains");
-const similarityPercent = require("./similarity");
-const punycode = require("punycode/");
+// const brands = require("./brandDomains");
+// const similarityPercent = require("./similarity");
+// const punycode = require("punycode/");
+
+import brands from "./brandDomains.js";
+import similarityPercent from "./similarity.js";
+import punycode from "punycode/";
 
 const homographMap = {
   а: "a",
@@ -122,4 +126,5 @@ function detectLink(inputUrl) {
   }
 }
 
-module.exports = detectLink;
+// module.exports = detectLink;
+export default detectLink;
