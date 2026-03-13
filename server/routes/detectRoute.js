@@ -1,15 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const detectLink = require("../utils/detectLink");
-
-// router.post("/detect", (req, res) => {
-//   const { url } = req.body;
-
-//   const result = detectLink(url);
-
-//   res.json(result);
-// });
+const detectLink = require("../../utils/detectLink");
 
 router.post("/detect", (req, res) => {
   const { url } = req.body;
