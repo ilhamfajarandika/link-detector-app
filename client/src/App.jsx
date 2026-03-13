@@ -8,11 +8,11 @@ function App() {
   const [result, setResult] = useState(null);
 
   const checkUrl = async (url) => {
-    // const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/detect`, {
-    //   url,
-    // });
+    const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/detect`, {
+      url,
+    });
     // const res = await axios.post("http://localhost:5000/api/detect", { url });
-    const res = await axios.post("/api/detect", { url });
+    // const res = await axios.post("/api/detect", { url });
 
     setResult(res.data);
     console.log(res.data);
