@@ -4,7 +4,7 @@
 
 import brands from "./brandDomains.js";
 import similarityPercent from "./similarity.js";
-import punycode from "punycode/";
+import punycode from "punycode";
 
 const homographMap = {
   а: "a",

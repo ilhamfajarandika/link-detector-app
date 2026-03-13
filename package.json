@@ -3,5 +3,8 @@
   "private": true,
   "scripts": {
     "build": "cd client && npm install && npm run build"
+  },
+  "dependencies": {
+    "punycode": "^2.3.1"
   }
 }
