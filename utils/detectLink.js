@@ -66,23 +66,21 @@ function detectLink(inputUrl) {
 
     let riskScore = 0;
 
-    if (punycodeDetected) riskScore += 40;
+    if (punycodeDetected) riskScore += 25;
     if (unicodeDetected) riskScore += 30;
     if (homographDetected) riskScore += 30;
 
-    const domainName = normalizeDomain(getMainDomain(decodedDomain));
-    const domainParts = domainName.split("-");
+    const mainDomain = getMainDomain(decodedDomain).toLowerCase();
+    const normalizedDomain = normalizeDomain(mainDomain);
+    const domainParts = normalizedDomain.split("-");
 
     let similarDomain = null;
     let similarityScore = 0;
 
-    // cek apakah domain sama persis dengan brand
     for (const brand of brands) {
-      const brandName = normalizeDomain(getMainDomain(brand));
+      const brandName = getMainDomain(brand).toLowerCase();
 
-      if (domainName === brandName) {
-        similarityScore = 0;
-        similarDomain = null;
+      if (mainDomain === brandName) {
         return {
           original: inputUrl,
           hostname: rawHostname,
@@ -91,24 +89,26 @@ function detectLink(inputUrl) {
           unicodeDetected,
           homographDetected,
           suspiciousChars,
-          similarityScore,
-          similarDomain,
+          similarityScore: 0,
+          similarDomain: null,
           domainLength: decodedDomain.length,
           riskScore: 0,
         };
       }
     }
 
-    for (const brand of brands) {
-      const brandName = normalizeDomain(getMainDomain(brand));
+    for (const part of domainParts) {
+      if (part === brandName) {
+        similarityScore = 95;
+        similarDomain = brand;
+        break;
+      }
 
-      for (const part of domainParts) {
-        const score = similarityPercent(part, brandName);
+      const score = similarityPercent(part, brandName);
 
-        if (score > similarityScore) {
-          similarityScore = score;
-          similarDomain = brand;
-        }
+      if (score > similarityScore) {
+        similarityScore = score;
+        similarDomain = brand;
       }
     }
 
@@ -135,5 +135,4 @@ function detectLink(inputUrl) {
   }
 }
 
-// module.exports = detectLink;
 export default detectLink;
