@@ -1,7 +1,3 @@
-// const brands = require("./brandDomains");
-// const similarityPercent = require("./similarity");
-// const punycode = require("punycode/");
-
 import brands from "./brandDomains.js";
 import similarityPercent from "./similarity.js";
 import punycode from "punycode";
@@ -74,23 +70,39 @@ function detectLink(inputUrl) {
     if (unicodeDetected) riskScore += 30;
     if (homographDetected) riskScore += 30;
 
-    const domainName = normalizeDomain(decodedDomain.split(".")[0]);
+    const domainName = normalizeDomain(getMainDomain(decodedDomain));
     const domainParts = domainName.split("-");
 
     let similarDomain = null;
     let similarityScore = 0;
 
+    // cek apakah domain sama persis dengan brand
     for (const brand of brands) {
-      const brandName = normalizeDomain(brand.split(".")[0]);
+      const brandName = normalizeDomain(getMainDomain(brand));
 
-      // cek setiap bagian domain
+      if (domainName === brandName) {
+        similarityScore = 0;
+        similarDomain = null;
+        return {
+          original: inputUrl,
+          hostname: rawHostname,
+          decodedDomain,
+          punycodeDetected,
+          unicodeDetected,
+          homographDetected,
+          suspiciousChars,
+          similarityScore,
+          similarDomain,
+          domainLength: decodedDomain.length,
+          riskScore: 0,
+        };
+      }
+    }
+
+    for (const brand of brands) {
+      const brandName = normalizeDomain(getMainDomain(brand));
+
       for (const part of domainParts) {
-        if (part === brandName) {
-          similarityScore = 95;
-          similarDomain = brand;
-          break;
-        }
-
         const score = similarityPercent(part, brandName);
 
         if (score > similarityScore) {
@@ -100,11 +112,8 @@ function detectLink(inputUrl) {
       }
     }
 
-    if (similarityScore > 80) riskScore += 40;
-    else if (similarityScore > 65) riskScore += 25;
-    else if (similarityScore > 50) riskScore += 10;
-
-    if (decodedDomain.length > 20) riskScore += 5;
+    if (similarityScore > 85) riskScore += 40;
+    else if (similarityScore > 75) riskScore += 25;
 
     if (riskScore > 100) riskScore = 100;
 
