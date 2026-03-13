@@ -66,21 +66,24 @@ function detectLink(inputUrl) {
 
     let riskScore = 0;
 
-    if (punycodeDetected) riskScore += 25;
+    if (punycodeDetected) riskScore += 40;
     if (unicodeDetected) riskScore += 30;
     if (homographDetected) riskScore += 30;
 
-    const mainDomain = getMainDomain(decodedDomain).toLowerCase();
+    const mainDomain = getMainDomain(decodedDomain);
     const normalizedDomain = normalizeDomain(mainDomain);
     const domainParts = normalizedDomain.split("-");
 
     let similarDomain = null;
     let similarityScore = 0;
 
+    // cek apakah domain sama persis dengan brand
     for (const brand of brands) {
-      const brandName = getMainDomain(brand).toLowerCase();
+      const brandName = normalizeDomain(getMainDomain(brand));
 
-      if (mainDomain === brandName) {
+      if (domainName === brandName) {
+        similarityScore = 0;
+        similarDomain = null;
         return {
           original: inputUrl,
           hostname: rawHostname,
@@ -89,26 +92,24 @@ function detectLink(inputUrl) {
           unicodeDetected,
           homographDetected,
           suspiciousChars,
-          similarityScore: 0,
-          similarDomain: null,
+          similarityScore,
+          similarDomain,
           domainLength: decodedDomain.length,
           riskScore: 0,
         };
       }
     }
 
-    for (const part of domainParts) {
-      if (part === brandName) {
-        similarityScore = 95;
-        similarDomain = brand;
-        break;
-      }
+    for (const brand of brands) {
+      const brandName = normalizeDomain(getMainDomain(brand));
 
-      const score = similarityPercent(part, brandName);
+      for (const part of domainParts) {
+        const score = similarityPercent(part, brandName);
 
-      if (score > similarityScore) {
-        similarityScore = score;
-        similarDomain = brand;
+        if (score > similarityScore) {
+          similarityScore = score;
+          similarDomain = brand;
+        }
       }
     }
 
@@ -135,4 +136,5 @@ function detectLink(inputUrl) {
   }
 }
 
+// module.exports = detectLink;
 export default detectLink;
