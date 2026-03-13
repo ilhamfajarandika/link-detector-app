@@ -2,6 +2,6 @@
   "name": "link-detector",
   "private": true,
   "scripts": {
-    "build": "cd client && npm install && npm run build"
+    "build": " npm run build"
   }
 }
