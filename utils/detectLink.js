@@ -79,9 +79,9 @@ function detectLink(inputUrl) {
 
     // cek apakah domain sama persis dengan brand
     for (const brand of brands) {
-      const brandName = normalizeDomain(getMainDomain(brand));
+      const brandName = getMainDomain(brand).toLowerCase();
 
-      if (domainName === brandName) {
+      if (mainDomain.toLowerCase() === brandName) {
         similarityScore = 0;
         similarDomain = null;
         return {
