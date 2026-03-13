@@ -34,4 +34,5 @@ function similarityPercent(a, b) {
   return Math.round((1 - distance / maxLength) * 100);
 }
 
-module.exports = similarityPercent;
+// module.exports = similarityPercent;
+export default similarityPercent;

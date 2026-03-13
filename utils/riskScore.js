@@ -17,4 +17,5 @@ function calculateRisk(data) {
   return score;
 }
 
-module.exports = calculateRisk;
+// module.exports = calculateRisk;
+export default calculateRisk;

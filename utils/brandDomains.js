@@ -49,4 +49,5 @@ const brands = [
   "amazon.com",
 ];
 
-module.exports = brands;
+// module.exports = brands;
+export default brands;
