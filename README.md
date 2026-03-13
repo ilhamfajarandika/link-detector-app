@@ -1,18 +1,20 @@
-# Link Detector 🔐
+# Link Guardian 🔐
 
-**Link Guardian** is a web-based phishing detection tool that analyzes suspicious URLs and identifies potential security threats such as **typosquatting, homograph attacks, Unicode domains, and punycode manipulation**.
+**Link Guardian** adalah alat pendeteksi phishing berbasis web yang menganalisis URL untuk mengidentifikasi potensi ancaman keamanan seperti **typosquatting, homograph attack, domain Unicode, dan manipulasi punycode**.
 
-The system evaluates a given URL and produces a **risk score** along with explanations of detected anomalies.
+Sistem ini mengevaluasi URL yang diberikan dan menghasilkan **risk score** beserta penjelasan mengenai anomali yang terdeteksi.
+
+Proyek ini menunjukkan bagaimana penyerang dapat memanipulasi nama domain untuk **meniru situs web yang sah** dan menipu pengguna agar memberikan informasi sensitif.
 
 ---
 
-# 🚀 Features
+# 🚀 Fitur
 
-### 1. Typosquatting Detection
+## 1. Deteksi Typosquatting
 
-Detects domains that mimic popular brands using small character changes.
+Mendeteksi domain yang meniru merek populer dengan mengganti karakter menggunakan huruf atau angka yang mirip secara visual.
 
-Example:
+Contoh:
 
 ```
 g00gle.com → google.com
@@ -20,77 +22,144 @@ paypaI.com → paypal.com
 faceb00k.com → facebook.com
 ```
 
+Penyerang sering mengganti huruf dengan angka atau huruf besar untuk mengecoh pengguna.
+
 ---
 
-### 2. Unicode Homograph Detection
+## 2. Deteksi Unicode Homograph
 
-Detects visually similar characters from other alphabets used to impersonate legitimate domains.
+Mendeteksi domain yang menggunakan **karakter Unicode dari alfabet lain** yang terlihat mirip dengan karakter Latin.
 
-Example:
+Contoh:
 
 ```
 аррӏе.com → apple.com
 gοοgle.com → google.com
 ```
 
-These attacks replace Latin characters with **Cyrillic or Greek letters**.
+Serangan ini biasanya menggunakan huruf dari **alfabet Cyrillic atau Yunani** untuk menyamarkan domain berbahaya.
 
 ---
 
-### 3. Punycode Detection
+## 3. Deteksi Punycode
 
-Detects domains encoded using **Punycode** (`xn--`) that may hide malicious Unicode characters.
+Mendeteksi domain yang dienkode menggunakan **Punycode (`xn--`)**, yang digunakan untuk merepresentasikan domain Unicode dalam format ASCII.
 
-Example:
+Contoh:
 
 ```
 xn--pple-43d.com → аpple.com
 ```
 
+Walaupun Punycode digunakan secara sah untuk domain internasional, teknik ini sering disalahgunakan dalam serangan phishing untuk menyembunyikan karakter Unicode yang menipu.
+
 ---
 
-### 4. Brand Similarity Analysis
+## 4. Analisis Kemiripan Brand
 
-Uses a **Levenshtein similarity algorithm** to compare suspicious domains against known brand domains.
+Sistem menggunakan **algoritma kemiripan Levenshtein** untuk membandingkan domain yang mencurigakan dengan domain dari brand terkenal.
 
-Example:
+Contoh:
 
 ```
 outloooook.com → outlook.com
 ```
 
----
-
-### 5. Risk Scoring System
-
-Each analyzed URL receives a **risk score (0–100)** based on detected anomalies.
-
-Risk factors include:
-
-* Punycode domains
-* Unicode characters
-* Homograph characters
-* Brand similarity
-* Suspicious domain patterns
+Hal ini membantu mendeteksi domain yang mencoba meniru layanan populer.
 
 ---
 
-# 🧠 How It Works
+## 5. Sistem Penilaian Risiko (Risk Score)
 
-1. User submits a URL.
+Setiap URL yang dianalisis akan mendapatkan **risk score (0–100)** berdasarkan anomali yang ditemukan.
 
-2. Backend parses the domain.
+Faktor risiko meliputi:
 
-3. The system checks for:
+* Domain Punycode
+* Karakter Unicode
+* Karakter Homograph
+* Kemiripan dengan brand
+* Pola domain mencurigakan
 
-   * Punycode encoding
-   * Unicode characters
-   * Homograph characters
-   * Brand similarity
+Semakin tinggi skornya, semakin besar kemungkinan domain tersebut berbahaya.
 
-4. A **risk score** is calculated.
+---
 
-5. Results are displayed with highlighted suspicious characters.
+# 🧠 Cara Kerja
+
+1. Pengguna memasukkan URL.
+2. Backend mem-parsing nama domain.
+3. Sistem melakukan pemeriksaan terhadap:
+    * Encoding Punycode
+    * Karakter Unicode
+    * Karakter Homograph
+    * Kemiripan dengan brand
+4. Sistem menghitung **risk score**.
+5. Hasil analisis ditampilkan di frontend dengan indikator yang terdeteksi.
+
+---
+
+# 🔎 Interpretasi Hasil
+
+## ✅ Link Aman
+
+Sebuah link dianggap **aman** apabila:
+
+* Tidak terdapat manipulasi Unicode
+* Tidak ada karakter homograph
+* Tidak ada indikasi peniruan brand
+* Risk score rendah
+
+Contoh:
+
+```
+https://google.com
+
+Risk Score: 0%
+Status: Safe
+```
+
+---
+
+## ⚠ Link Mencurigakan
+
+Link dianggap **mencurigakan** jika sistem menemukan anomali seperti:
+
+* Domain Punycode
+* Karakter Unicode
+* Karakter Homograph
+* Kemiripan dengan brand
+
+Contoh:
+
+```
+https://g00gle.com
+
+Similarity: 83% → google.com
+Risk Score: 40%
+
+Status: Suspicious Domain
+```
+
+---
+
+## 🚨 Link Berisiko Tinggi
+
+Domain yang memiliki beberapa indikator serangan dapat memperoleh risk score tinggi.
+
+Contoh:
+
+```
+https://xn--pple-43d.com
+
+Decoded Domain: аpple.com
+Unicode Characters: Detected
+Homograph Characters: Detected
+
+Risk Score: 85%
+
+Status: High Risk / Potential Phishing
+```
 
 ---
 
@@ -102,21 +171,22 @@ Risk factors include:
 * TailwindCSS
 * Axios
 * Lucide Icons
+* Vite
 
 ### Backend
 
 * Node.js
-* Express
+* Vercel Serverless Functions
 
-### Algorithms
+### Algoritma
 
-* Levenshtein Distance (Similarity Detection)
+* Levenshtein Distance (Deteksi Kemiripan Domain)
 
 ---
 
-# ⚙️ Installation
+# ⚙️ Instalasi
 
-### 1. Clone Repository
+## 1. Clone Repository
 
 ```
 git clone https://github.com/ilhamfajarandika/link-guardian.git
@@ -125,16 +195,13 @@ cd link-guardian
 
 ---
 
-### 2. Install Dependencies
-
-Backend
+## 2. Install Dependencies
 
 ```
-cd server
 npm install
 ```
 
-Frontend
+Frontend:
 
 ```
 cd client
@@ -143,27 +210,22 @@ npm install
 
 ---
 
-### 3. Run the Application
+## 3. Menjalankan Aplikasi
 
-Start backend:
-
-```
-cd server
-node server.js
-```
-
-Start frontend:
+Jalankan frontend:
 
 ```
 cd client
 npm run dev
 ```
 
+API dijalankan menggunakan **serverless function pada folder `/api`**.
+
 ---
 
-# 🧪 Example Test URLs
+# 🧪 Contoh URL Pengujian
 
-### Safe Domains
+## Domain Aman
 
 ```
 https://google.com
@@ -173,7 +235,7 @@ https://wikipedia.org
 
 ---
 
-### Typosquatting
+## Typosquatting
 
 ```
 https://g00gle.com
@@ -183,7 +245,7 @@ https://paypaI.com
 
 ---
 
-### Phishing Style Domains
+## Domain Bergaya Phishing
 
 ```
 https://paypal-account-verification.com
@@ -193,7 +255,7 @@ https://facebook-security-alert.com
 
 ---
 
-### Unicode Homograph
+## Unicode Homograph
 
 ```
 https://аррӏе.com
@@ -202,7 +264,7 @@ https://gοοgle.com
 
 ---
 
-### Punycode
+## Punycode
 
 ```
 https://xn--pple-43d.com
@@ -210,12 +272,12 @@ https://xn--pple-43d.com
 
 ---
 
-# 📊 Example Output
+# 📊 Contoh Output
 
 ```
 Detected Domain: g00gle.com
 
-⚠ Domain looks similar to google.com
+⚠ Domain terlihat mirip dengan google.com
 Similarity: 83%
 
 Risk Score: 40%
@@ -224,10 +286,8 @@ Status: Suspicious Domain
 
 ---
 
-# 🎯 Purpose
+# 🎯 Tujuan
 
-This project was created as a **learning project in web security and phishing detection**, demonstrating how attackers manipulate domain names to deceive users.
+Proyek ini dibuat sebagai **proyek pembelajaran dalam keamanan web dan deteksi phishing**, yang menunjukkan bagaimana penyerang memanipulasi nama domain untuk menipu pengguna.
 
-This tool is designed **for educational and research purposes only**.
-It should not be used as a full replacement for professional phishing detection systems.
-
+Alat ini ditujukan **untuk tujuan edukasi dan penelitian**, dan tidak dimaksudkan sebagai pengganti sistem deteksi phishing profesional.
